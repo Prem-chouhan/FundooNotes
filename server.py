@@ -8,22 +8,20 @@ import cgi
 # sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/view/')
 
 # sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
-from model.query import DbManaged
+from model import query
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from view.registration import registration
-from view.response import Response
+from view import response
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 120
-import pdb
 
 
 class S(BaseHTTPRequestHandler):
 
     def _set_headers(self):
         self.send_response(200)
-
         self.send_header("Content-type", "json")
         self.end_headers()
 
@@ -74,10 +72,7 @@ class S(BaseHTTPRequestHandler):
             response_data = {'success': True, "data": [],
                              "message": "This is listing Of isPinned{}{}{}".format(catch, respon, res)}
             Response(self).jsonResponse(status=404, data=response_data)
-            # response_data = {'success': True, "data": [], "message": "This is listing Of isTrash{}".format(respon)}
-            # Response(self).jsonResponse(status=404, data=response_data)
-            # response_data = {'success': True, "data": [], "message": "This is listing Of isArchive{}".format(res)}
-            # Response(self).jsonResponse(status=404, data=response_data)
+
 
         else:
             # response_data = {'success': False, "data": [], "message": "URL Invalid"}

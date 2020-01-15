@@ -1,11 +1,12 @@
 import mysql.connector
 import sys
 import os
-from dotenv     import load_dotenv
+from dotenv import load_dotenv
 
 load_dotenv()
-sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
-from query import *
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
+from model import query
+
 
 class db_connection:
     __instance = None

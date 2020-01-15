@@ -19,6 +19,7 @@ class headers():
 
 class HttpService(object):
     name = "test"
+
     @http('GET', '/test')
     # @rpc
     def get_method(self, request):

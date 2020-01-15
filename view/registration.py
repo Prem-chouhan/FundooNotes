@@ -1,5 +1,5 @@
 import os, \
-    sys,\
+    sys, \
     jwt, \
     cgi, \
     smtplib, \
@@ -10,19 +10,19 @@ from datetime import datetime, timedelta
 
 # from ..model.query import DbManaged
 
-#sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
-#sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/view')
-
-from model.query import DbManaged
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/view')
 from view.response import Response
+from model.query import DbManaged
+# from view import registration
 import pdb
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 120
 
-my_db_obj = DbManaged()
 
+object = DbManaged()
 
 class registration:
 
@@ -47,15 +47,15 @@ class registration:
         data['email'] = form['email'].value
         data['password'] = form['password'].value
         data['confirm_password'] = form['confirm_password'].value
-        success = my_db_obj.email_address_exists(data)
-        present = my_db_obj.email_validate(form['email'].value)
+        success = object.email_address_exists(data)
+        present = object.email_validate(form['email'].value)
         if not present:
             response_data.update(
                 {"message": "Email Format is Invalid please Re-enter Email", "success": False})
             Response(self).jsonResponse(status=202, data=response_data)
         else:
             if success:
-                my_db_obj.registration(data)
+                object.registration(data)
                 response_data.update({"success": True, "data": [], "message": "Registration Done Successfully"})
                 Response(self).jsonResponse(status=202, data=response_data)
             else:
@@ -68,6 +68,7 @@ class registration:
         it will give response of Login done successfully
         no return :return:
         """
+        object = DbManaged()
         global jwt_token
         form = cgi.FieldStorage(
             fp=self.rfile,
@@ -84,9 +85,9 @@ class registration:
         data = {}
         data['username'] = form['username'].value
         data['password'] = form['password'].value
-        success = my_db_obj.username_exists(data)
+        success = object.username_exists(data)
         if success:
-            my_db_obj.login_user(data)
+            object.login_user(data)
             username = data['username']
             payload = {
                 'username': username,
@@ -113,7 +114,7 @@ class registration:
         link will be sent to email and with that link the password will be reset
         no return :return:
         """
-        global my_db_obj
+        global object
         form = cgi.FieldStorage(
             fp=self.rfile,
             headers=self.headers,
@@ -121,10 +122,9 @@ class registration:
                      'CONTENT_TYPE': self.headers['Content-Type'],
                      })
         response_data = {'success': True, "data": [], "message": ""}
-        # my_db_obj = DbManaged()
         data = {}
         data['email'] = form['email'].value
-        present = my_db_obj.email_address_exists(data)
+        present = object.email_address_exists(data)
         if present:
             response_data.update({"success": False, "message": "Wrong Credentials"})
             Response(self).jsonResponse(status=202, data=response_data)
@@ -132,7 +132,7 @@ class registration:
             email = data['email']
             encoded = jwt.encode({"email_id": email}, 'secret', algorithm='HS256').decode("utf-8")
             message = f"http://127.0.0.1:8888/reset/?token={encoded}"
-            my_db_obj.smtp(email, message)
+            object.smtp(email, message)
             response_data.update({"success": True, "message": "Successfully sent mail"})
             Response(self).jsonResponse(status=202, data=response_data)
 
@@ -150,7 +150,7 @@ class registration:
                      })
         data = {}
         data['password'] = form['password'].value
-        my_db_obj.update_password(data, key)
+        object.update_password(data, key)
         response_data = {'success': False, "data": [], "message": "Password Updated Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
 
@@ -174,7 +174,7 @@ class registration:
         data['isArchive'] = form['isArchive'].value
         data['isTrash'] = form['isTrash'].value
         print(data)
-        my_db_obj.query_insert(data)
+        object.query_insert(data)
         response_data = {'success': True, "data": [], "message": "Inserted Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
 
@@ -193,7 +193,7 @@ class registration:
         data['id'] = form['id'].value
         data['tittle'] = form['tittle'].value
         # print(data)
-        my_db_obj.query_update(data)
+        object.query_update(data)
         response_data = {'success': True, "data": [], "message": "Updated Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
 
@@ -210,7 +210,7 @@ class registration:
                      })
         data = {}
         data['id'] = form['id'].value
-        my_db_obj.query_delete(data)
+        object.query_delete(data)
         response_data = {'success': True, "data": [], "message": "Deleted Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
 
@@ -219,6 +219,7 @@ class registration:
         Here record is Read in table and response is shown
         no return:return:
         """
+        object = DbManaged()
         form = cgi.FieldStorage(
             fp=self.rfile,
             headers=self.headers,
@@ -229,7 +230,7 @@ class registration:
         data = {}
         data['tablename'] = form['tablename'].value
         print(data)
-        my_db_obj.query_read(data)
+        object.query_read(data)
         response_data = {'success': True, "data": [], "message": "Read Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
 
@@ -247,7 +248,7 @@ class registration:
         data = {}
         data['tablename'] = form['tablename'].value
         # print(data)
-        my_db_obj.query_create(data)
+        object.query_create(data)
         response_data = {'success': True, "data": [], "message": "created table Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
 
@@ -262,7 +263,7 @@ class registration:
             jwt_decode = jwt.decode(catch, JWT_SECRET, JWT_ALGORITHM)
             data = jwt_decode['username']
             # print(jwt_decode,"jndcjnjc")
-            success = my_db_obj.username_exists(data)
+            success = object.username_exists(data)
             # print(success)
             return success
         except jwt.ExpiredSignatureError:
@@ -273,6 +274,7 @@ class registration:
             return 'Invalid token. Please log in again.'
 
     def updateProfile(self):
+        object = DbManaged()
         form = cgi.FieldStorage(
             fp=self.rfile,
             headers=self.headers,
@@ -285,14 +287,14 @@ class registration:
         data['id'] = form['id'].value
         # image = base64.b64encode(data['path'])
         # valid_image = image.decode("utf-8")
-        flag = my_db_obj.validate_file_extension(data)
-        check = my_db_obj.validate_file_size(data)
+        flag = object.validate_file_extension(data)
+        check = object.validate_file_size(data)
         # valid_image = image.decode("utf-8")
         # sql = "INSERT INTO Picture(path) VALUES (%s)"
         # val = (data['path'])
         # # obj = db_connection()
         # my_db_obj.queryExecute(sql, val)
-        my_db_obj.update_profile(data)
+        object.update_profile(data)
         # print(flag)
         # print(check)
         if flag and check:
@@ -303,7 +305,7 @@ class registration:
             Response(self).jsonResponse(status=404, data=response_data)
 
     def list(self):
-        catch = my_db_obj.list_notes()
-        respon = my_db_obj.list_note()
-        res = my_db_obj.list_not()
+        catch = object.list_notes()
+        respon = object.list_note()
+        res = object.list_not()
         return catch, respon, res

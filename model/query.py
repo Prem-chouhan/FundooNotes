@@ -5,13 +5,13 @@ import smtplib
 import socket
 from email.mime.text import MIMEText
 
-sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/configration/')
-from db_connection import *
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/configration/')
+from configration.connection import db_connection
 
 # sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/templates/')
 import os
 
-my_db_obj = db_connection()
+my_db = db_connection()
 
 
 class DbManaged:
@@ -24,7 +24,7 @@ class DbManaged:
         """Insert Query is fired Here and registration is done"""
         sql = "INSERT INTO Registration(email,password,confirm_password) VALUES (%s, %s, %s)"
         val = (data['email'], data['password'], data['confirm_password'])
-        my_db_obj.queryExecute(sql, val)
+        my_db.queryExecute(sql, val)
         # self.mycursor.execute(sql, val)
         # self.mydb.commit()
 
@@ -32,7 +32,7 @@ class DbManaged:
         """Insert Query is fired Here and Login is done"""
         sql = "INSERT INTO Login(username,password) VALUES (%s, %s)"
         val = (data['username'], data['password'])
-        my_db_obj.queryExecute(sql, val)
+        my_db.queryExecute(sql, val)
         # self.mycursor.execute(sql, val)
         # self.mydb.commit()
 
@@ -42,7 +42,7 @@ class DbManaged:
         # mycursor.execute(sql)
         # my_result = self.mycursor.fetchall()
         # print(len(my_result))
-        my_result = my_db_obj.queryfetch(sql)
+        my_result = my_db.queryfetch(sql)
         # print(my_result)
         if my_result:
             return False
@@ -54,7 +54,7 @@ class DbManaged:
         # print(data)
         sql = "SELECT username FROM Login where username = '" + data['username'] + "'"
         # self.mycursor.execute(sql)
-        my_result = my_db_obj.queryfetch(sql)
+        my_result = my_db.queryfetch(sql)
         # my_result = self.mycursor.fetchall()
         if my_result:
             return False
@@ -71,7 +71,7 @@ class DbManaged:
         """Password is check if the user old password is present in database or not"""
         sql = "SELECT password FROM Login where password = '" + data['password'] + "'"
         # self.mycursor.execute(sql)
-        my_result = my_db_obj.queryfetch(sql)
+        my_result = my_db.queryfetch(sql)
         if my_result:
             return True
         else:
@@ -82,7 +82,7 @@ class DbManaged:
         """Here password is updated with update query"""
         sql = "UPDATE Registration SET password = '" + data['password'] + "' WHERE email = '" + key + "' "
         # print(sql)
-        my_db_obj.query(sql)
+        my_db.query(sql)
 
         # self.mycursor.execute(sql)
         # self.mydb.commit()
@@ -138,7 +138,7 @@ class DbManaged:
         sql = "INSERT INTO crud(tittle,description,color,isPinned,isArchive,isTrash) VALUES (%s,%s,%s,%s,%s,%s)"
         val = (data['tittle'], data['description'], data['color'], data['isPinned'], data['isArchive'], data['isTrash'])
         # obj = db_connection()
-        my_db_obj.queryExecute(sql, val)
+        my_db.queryExecute(sql, val)
         # self.mycursor.execute(sql, val)
         # self.mydb.commit()
         # return True
@@ -152,7 +152,7 @@ class DbManaged:
         sql = "UPDATE crud SET tittle = '" + data['tittle'] + "' WHERE id = '" + data['id'] + "' "
         # self.mycursor.execute(sql)
         # self.mydb.commit()
-        my_db_obj.query(sql)
+        my_db.query(sql)
 
     def query_delete(self, data):
         """
@@ -163,7 +163,7 @@ class DbManaged:
         sql = "DELETE FROM crud WHERE id = '" + data['id'] + "'"
         # self.mycursor.execute(sql)
         # self.mydb.commit()
-        my_db_obj.query(sql)
+        my_db.query(sql)
 
     # def query_read(self, data):
     #     print(data['tablename'])
@@ -195,7 +195,7 @@ class DbManaged:
         """
         # hj = str(data)
         sql = "UPDATE Picture SET path = '" + data['path'] + "' WHERE id = '"+data['id']+"' "
-        my_db_obj.query(sql)
+        my_db.query(sql)
 
     def validate_file_extension(self, data):
         import os
@@ -210,17 +210,17 @@ class DbManaged:
 
     def list_notes(self):
         sql = "select * from crud where isPinned = 1"
-        catch = my_db_obj.queryfetch(sql)
+        catch = my_db.queryfetch(sql)
         return catch
 
     def list_note(self):
         sql = "select * from crud where isTrash = 1"
-        catch = my_db_obj.queryfetch(sql)
+        catch = my_db.queryfetch(sql)
         return catch
 
     def list_not(self):
         sql = "select * from crud where isArchive = 1"
-        catch = my_db_obj.queryfetch(sql)
+        catch = my_db.queryfetch(sql)
         return catch
 
     # def list_notes(self):
