@@ -8,21 +8,16 @@ import os, \
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
 
-# from ..model.query import DbManaged
-
-# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
-# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/view')
 from view.response import Response
 from model.query import DbManaged
-# from view import registration
 import pdb
 
 JWT_SECRET = 'secret'
 JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 120
 
-
 object = DbManaged()
+
 
 class registration:
 
@@ -104,9 +99,6 @@ class registration:
         else:
             response_data.update({"message": "Username already exists", "success": False})
             Response(self).jsonResponse(status=202, data=response_data)
-
-        # except KeyError:
-        #     pass
 
     def forgot_password(self):
         """
@@ -226,7 +218,6 @@ class registration:
             environ={'REQUEST_METHOD': 'POST',
                      'CONTENT_TYPE': self.headers['Content-Type'],
                      })
-        # my_db_obj = DbManaged()
         data = {}
         data['tablename'] = form['tablename'].value
         print(data)
@@ -247,7 +238,6 @@ class registration:
                      })
         data = {}
         data['tablename'] = form['tablename'].value
-        # print(data)
         object.query_create(data)
         response_data = {'success': True, "data": [], "message": "created table Successfully"}
         Response(self).jsonResponse(status=404, data=response_data)
@@ -262,9 +252,7 @@ class registration:
             print("chdshc")
             jwt_decode = jwt.decode(catch, JWT_SECRET, JWT_ALGORITHM)
             data = jwt_decode['username']
-            # print(jwt_decode,"jndcjnjc")
             success = object.username_exists(data)
-            # print(success)
             return success
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'

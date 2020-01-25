@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
+
 from model import query
 
 
