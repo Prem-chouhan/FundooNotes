@@ -1,0 +1,2 @@
+
+(google-chrome:18098): Gtk-WARNING **: 19:26:01.748: cannot open display: 

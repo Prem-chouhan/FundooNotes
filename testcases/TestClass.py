@@ -1,16 +1,16 @@
-# import pytest
-
 import sys
 import pytest
+from registration import registration
 
-# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/view')
-from view import *
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/view/')
+# from view.registration import registration
 
-sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/configration')
-from db_connection import db_connection
-
-sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
-from query import DbManaged
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/config')
+# from db_connection import db_connection
+#
+# sys.path.insert(0, '/home/admin-1/PycharmProjects/FunDooapp/model')
+# from query import DbManaged
+# from view.registration import registration
 
 
 class TestClass:
@@ -19,7 +19,7 @@ class TestClass:
         obj = registration()
         assert email == premchouhan@gmail.com
         with pytest.raises(NameError):
-            obj.register()
+            obj.register_user()
 
     # def test_login(self):
     #     obj = registration
@@ -54,7 +54,7 @@ class TestClass:
     # def test_insert(self):
     #     obj = registration
     #     with pytest.raises(NameError):
-    #         obj.insert(tittle, description, color, isPinned, isArchive, isTrash)
+    #         obj.insert(tittle, description, color, is_pinned, is_archived, is_trashed)
     #
     # def test_update(self):
     #     obj = registration
